@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LightBlock;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -25,11 +26,13 @@ public class FlashlightItem extends Item implements IEnergyStorage {
     private static final int MAX_ENERGY = 6000;
     private static final int LIGHT_RANGE = 15;
     private static final int ENERGY_USAGE = 1;
-    private static final int LIGHT_FADE_DELAY = 2;
+    private static final int LIGHT_FADE_DELAY = 5;
     private int energy = MAX_ENERGY;
     private BlockPos lastLightPos = null;
     private int ticksSinceLastLight = 0;
     private Map<BlockPos, Integer> fadingLights = new HashMap<>();
+    private static final int POSITION_AVERAGE_COUNT = 5;
+    private List<BlockPos> previousPositions;
 
     public FlashlightItem(Properties properties) {
         super(properties.component(PDataComponents.ENERGY.get(), 0)
@@ -54,26 +57,42 @@ public class FlashlightItem extends Item implements IEnergyStorage {
                     iterator.remove();
                 } else {
                     entry.setValue(ticksRemaining);
+                    int lightLevel = Math.max(1, (int)((float)ticksRemaining / LIGHT_FADE_DELAY * 15));
+                    level.setBlock(pos, Blocks.LIGHT.defaultBlockState().setValue(LightBlock.LEVEL, lightLevel), 3);
                 }
             }
 
             if (isEnabled && currentEnergy > 0 && (isSelected || player.getOffhandItem() == stack)) {
                 HitResult hit = player.pick(LIGHT_RANGE, 0, false);
                 if (hit.getType() == HitResult.Type.BLOCK) {
-                    BlockPos targetPos = ((BlockHitResult) hit).getBlockPos();
-                    BlockPos lightPos = targetPos.relative(((BlockHitResult) hit).getDirection());
+                    BlockHitResult blockHit = (BlockHitResult) hit;
+                    BlockPos targetPos = blockHit.getBlockPos();
+                    BlockPos newLightPos = targetPos.relative(blockHit.getDirection());
 
-                    if (level.getBlockState(lightPos).isAir()) {
-                        if (lastLightPos != null && !lastLightPos.equals(lightPos)) {
+                    if (level.getBlockState(newLightPos).isAir()) {
+                        if (previousPositions == null) {
+                            previousPositions = new ArrayList<>();
+                        }
+
+                        previousPositions.add(newLightPos);
+                        if (previousPositions.size() > POSITION_AVERAGE_COUNT) {
+                            previousPositions.remove(0);
+                        }
+
+                        BlockPos averagedPos = averagePositions(previousPositions);
+
+                        if (lastLightPos != null && !lastLightPos.equals(averagedPos)) {
                             fadingLights.put(lastLightPos, LIGHT_FADE_DELAY);
                         }
 
-                        level.setBlock(lightPos, Blocks.LIGHT.defaultBlockState(), 3);
-                        lastLightPos = lightPos;
-                        ticksSinceLastLight = 0;
+                        if (level.getBlockState(averagedPos).isAir()) {
+                            level.setBlock(averagedPos, Blocks.LIGHT.defaultBlockState().setValue(LightBlock.LEVEL, 15), 3);
+                            lastLightPos = averagedPos;
+                            ticksSinceLastLight = 0;
 
-                        currentEnergy -= ENERGY_USAGE;
-                        stack.set(PDataComponents.ENERGY.get(), currentEnergy);
+                            currentEnergy -= ENERGY_USAGE;
+                            stack.set(PDataComponents.ENERGY.get(), currentEnergy);
+                        }
                     }
                 }
             } else if (lastLightPos != null) {
@@ -84,6 +103,23 @@ public class FlashlightItem extends Item implements IEnergyStorage {
                 }
             }
         }
+    }
+
+    private BlockPos averagePositions(List<BlockPos> positions) {
+        if (positions.isEmpty()) return null;
+
+        double x = 0, y = 0, z = 0;
+        for (BlockPos pos : positions) {
+            x += pos.getX();
+            y += pos.getY();
+            z += pos.getZ();
+        }
+
+        return new BlockPos(
+                (int) Math.round(x / positions.size()),
+                (int) Math.round(y / positions.size()),
+                (int) Math.round(z / positions.size())
+        );
     }
 
     @Override
