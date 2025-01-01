@@ -18,7 +18,9 @@ public class PowerItems {
         PItems.ITEMS.register(modEventBus);
         PCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         PDataComponents.COMPONENTS.register(modEventBus);
+        modEventBus.addListener(NightVisionClientHandler::onClientSetup);
         NightVisionClientHandler.init();
+
     }
 
 }
