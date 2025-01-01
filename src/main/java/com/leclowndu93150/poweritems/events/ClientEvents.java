@@ -1,24 +1,19 @@
 package com.leclowndu93150.poweritems.events;
 
 import com.leclowndu93150.poweritems.PowerItems;
-import com.leclowndu93150.poweritems.shader.FlashlightManager;
+import com.leclowndu93150.poweritems.shader.NightVisionManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.common.NeoForge;
 
-import java.io.IOException;
-
-import static com.leclowndu93150.poweritems.shader.FlashlightShader.createFlashlightShader;
+import static com.leclowndu93150.poweritems.shader.NightVisionShader.createNightVisionShader;
 
 @EventBusSubscriber(modid = PowerItems.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientEvents {
@@ -26,55 +21,48 @@ public class ClientEvents {
     @SubscribeEvent
     public static void registerShaders(RegisterShadersEvent event) {
         try {
-            PowerItems.LOGGER.info("Registering Flashlight shader");
-            event.registerShader(createFlashlightShader(event.getResourceProvider()), FlashlightManager.INSTANCE::setShader);
-            PowerItems.LOGGER.info("Flashlight shader registered successfully");
-        } catch (IOException e) {
-            PowerItems.LOGGER.error("Failed to load flashlight shader", e);
+            PowerItems.LOGGER.info("Registering Night Vision shader");
+            event.registerShader(createNightVisionShader(event.getResourceProvider()),
+                    NightVisionManager.INSTANCE::setShader);
+            PowerItems.LOGGER.info("Night Vision shader registered successfully");
+        } catch (Exception e) {
+            PowerItems.LOGGER.error("Failed to load night vision shader", e);
         }
     }
 
 
-    @SubscribeEvent
-    public static void clientSetup(FMLClientSetupEvent event) {
-        NeoForge.EVENT_BUS.addListener(EventPriority.NORMAL, false, RenderLevelStageEvent.class, event2 -> {
-            if (event2.getStage() == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
+    @EventBusSubscriber(modid = PowerItems.MODID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
+    static class ClientGameEvents {
+        @SubscribeEvent
+        public static void onRenderLevel(RenderLevelStageEvent event) {
+            if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
                 Player player = Minecraft.getInstance().player;
                 if (player != null) {
-                    FlashlightManager.INSTANCE.updateUniforms(player);
-                }
-            }
-        });
-    }
-}
+                    ShaderInstance shader = NightVisionManager.INSTANCE.getShader();
+                    if (shader != null) {
+                        NightVisionManager.INSTANCE.updateUniforms(player);
 
-@EventBusSubscriber(modid = PowerItems.MODID, bus = EventBusSubscriber.Bus.GAME,value = Dist.CLIENT)
-class ClientGameEvents{
-    @SubscribeEvent
-    public static void onRenderLevel(RenderLevelStageEvent event) {
-        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
-            Player player = Minecraft.getInstance().player;
-            if (player != null) {
-                ShaderInstance shader = FlashlightManager.INSTANCE.getShader();
-                if (shader != null) {
-                    PowerItems.LOGGER.debug("Applying flashlight shader");
-                    ShaderInstance oldShader = RenderSystem.getShader();
+                        ShaderInstance oldShader = RenderSystem.getShader();
 
-                    // Update and apply shader
-                    FlashlightManager.INSTANCE.updateUniforms(player);
-                    RenderSystem.setShader(() -> shader);
+                        RenderSystem.setShader(() -> shader);
+                        RenderSystem.setShaderTexture(0, Minecraft.getInstance().getMainRenderTarget().getColorTextureId());
 
-                    // Render a full-screen quad to apply the effect
-                    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-                    RenderSystem.enableBlend();
-                    RenderSystem.defaultBlendFunc();
+                        RenderSystem.enableBlend();
+                        RenderSystem.defaultBlendFunc();
+                        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-                    // Draw fullscreen quad
-                    Minecraft.getInstance().renderBuffers().bufferSource().endBatch(RenderType.translucent());
+                        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
+                        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                        bufferbuilder.vertex(-1.0D, -1.0D, 0.0D).uv(0.0F, 0.0F).endVertex();
+                        bufferbuilder.vertex(1.0D, -1.0D, 0.0D).uv(1.0F, 0.0F).endVertex();
+                        bufferbuilder.vertex(1.0D, 1.0D, 0.0D).uv(1.0F, 1.0F).endVertex();
+                        bufferbuilder.vertex(-1.0D, 1.0D, 0.0D).uv(0.0F, 1.0F).endVertex();
+                        BufferUploader.drawWithShader(bufferbuilder.end());
 
-                    // Restore previous state
-                    RenderSystem.setShader(() -> oldShader);
-                    RenderSystem.disableBlend();
+                        // Restore previous state
+                        RenderSystem.setShader(() -> oldShader);
+                        RenderSystem.disableBlend();
+                    }
                 }
             }
         }

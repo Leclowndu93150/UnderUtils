@@ -42,7 +42,7 @@ public class FlashlightItem extends Item implements IEnergyStorage {
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
-        /*
+
         if (!level.isClientSide && entity instanceof Player player) {
             boolean isEnabled = stack.getOrDefault(PDataComponents.ENABLED.get(), false);
             int currentEnergy = stack.getOrDefault(PDataComponents.ENERGY.get(), 0);
@@ -104,7 +104,7 @@ public class FlashlightItem extends Item implements IEnergyStorage {
                 }
             }
         }
-         */
+
     }
 
     private BlockPos averagePositions(List<BlockPos> positions) {

@@ -1,5 +1,6 @@
 package com.leclowndu93150.poweritems;
 
+import com.leclowndu93150.poweritems.client.NightVisionClientHandler;
 import com.leclowndu93150.poweritems.register.PCreativeTabs;
 import com.leclowndu93150.poweritems.register.PDataComponents;
 import com.leclowndu93150.poweritems.register.PItems;
@@ -17,6 +18,7 @@ public class PowerItems {
         PItems.ITEMS.register(modEventBus);
         PCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         PDataComponents.COMPONENTS.register(modEventBus);
+        NightVisionClientHandler.init();
     }
 
 }
