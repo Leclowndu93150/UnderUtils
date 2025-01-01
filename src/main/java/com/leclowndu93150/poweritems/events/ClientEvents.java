@@ -2,18 +2,15 @@ package com.leclowndu93150.poweritems.events;
 
 import com.leclowndu93150.poweritems.PowerItems;
 import com.leclowndu93150.poweritems.shader.NightVisionManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ShaderInstance;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.packs.resources.ResourceProvider;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterShadersEvent;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 
-import java.util.Objects;
+import java.io.IOException;
 
 import static com.leclowndu93150.poweritems.shader.NightVisionShader.createNightVisionShader;
 
@@ -31,4 +28,5 @@ public class ClientEvents {
             PowerItems.LOGGER.error("Failed to load night vision shader", e);
         }
     }
+
 }

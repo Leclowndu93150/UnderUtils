@@ -2,6 +2,10 @@ package com.leclowndu93150.poweritems.items;
 
 import com.leclowndu93150.poweritems.RandomUtils;
 import com.leclowndu93150.poweritems.register.PDataComponents;
+import com.leclowndu93150.poweritems.shader.FlashlightManager;
+import net.irisshaders.iris.Iris;
+import net.irisshaders.iris.api.v0.IrisApi;
+import net.irisshaders.iris.gl.program.Program;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -14,11 +18,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LightBlock;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import org.lwjgl.opengl.GL32;
+import org.lwjgl.opengl.GL43C;
 
 import java.util.*;
 
@@ -42,69 +44,23 @@ public class FlashlightItem extends Item implements IEnergyStorage {
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
-
         if (!level.isClientSide && entity instanceof Player player) {
             boolean isEnabled = stack.getOrDefault(PDataComponents.ENABLED.get(), false);
             int currentEnergy = stack.getOrDefault(PDataComponents.ENERGY.get(), 0);
 
-            Iterator<Map.Entry<BlockPos, Integer>> iterator = fadingLights.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<BlockPos, Integer> entry = iterator.next();
-                BlockPos pos = entry.getKey();
-                int ticksRemaining = entry.getValue() - 1;
-
-                if (ticksRemaining <= 0) {
-                    level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-                    iterator.remove();
-                } else {
-                    entry.setValue(ticksRemaining);
-                    int lightLevel = Math.max(1, (int)((float)ticksRemaining / LIGHT_FADE_DELAY * 15));
-                    level.setBlock(pos, Blocks.LIGHT.defaultBlockState().setValue(LightBlock.LEVEL, lightLevel), 3);
-                }
-            }
+            FlashlightManager.getInstance().setFlashlightEnabled(isEnabled && currentEnergy > 0);
+            FlashlightManager.getInstance().setFlashlightPower(currentEnergy);
 
             if (isEnabled && currentEnergy > 0 && (isSelected || player.getOffhandItem() == stack)) {
-                HitResult hit = player.pick(LIGHT_RANGE, 0, false);
-                if (hit.getType() == HitResult.Type.BLOCK) {
-                    BlockHitResult blockHit = (BlockHitResult) hit;
-                    BlockPos targetPos = blockHit.getBlockPos();
-                    BlockPos newLightPos = targetPos.relative(blockHit.getDirection());
+                currentEnergy -= ENERGY_USAGE;
+                stack.set(PDataComponents.ENERGY.get(), currentEnergy);
 
-                    if (level.getBlockState(newLightPos).isAir()) {
-                        if (previousPositions == null) {
-                            previousPositions = new ArrayList<>();
-                        }
-
-                        previousPositions.add(newLightPos);
-                        if (previousPositions.size() > POSITION_AVERAGE_COUNT) {
-                            previousPositions.remove(0);
-                        }
-
-                        BlockPos averagedPos = averagePositions(previousPositions);
-
-                        if (lastLightPos != null && !lastLightPos.equals(averagedPos)) {
-                            fadingLights.put(lastLightPos, LIGHT_FADE_DELAY);
-                        }
-
-                        if (level.getBlockState(averagedPos).isAir()) {
-                            level.setBlock(averagedPos, Blocks.LIGHT.defaultBlockState().setValue(LightBlock.LEVEL, 15), 3);
-                            lastLightPos = averagedPos;
-                            ticksSinceLastLight = 0;
-
-                            currentEnergy -= ENERGY_USAGE;
-                            stack.set(PDataComponents.ENERGY.get(), currentEnergy);
-                        }
-                    }
-                }
-            } else if (lastLightPos != null) {
-                ticksSinceLastLight++;
-                if (ticksSinceLastLight >= LIGHT_FADE_DELAY) {
-                    fadingLights.put(lastLightPos, LIGHT_FADE_DELAY);
-                    lastLightPos = null;
+                if (currentEnergy <= 0) {
+                    stack.set(PDataComponents.ENABLED.get(), false);
+                    FlashlightManager.getInstance().setFlashlightEnabled(false);
                 }
             }
         }
-
     }
 
     private BlockPos averagePositions(List<BlockPos> positions) {

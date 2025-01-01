@@ -100,7 +100,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
     runtimeOnly files("libs/sodium-neoforge-0.6.5+mc1.21.1.jar")
-    runtimeOnly "curse.maven:irisshaders-455508:5957827"
+    implementation "curse.maven:irisshaders-455508:5957827"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
