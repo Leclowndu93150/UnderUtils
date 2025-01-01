@@ -5,12 +5,12 @@
    ],
    "passes": [
        {
-           "name": "entity_outline",
+           "name": "poweritems:entity_outline",
            "intarget": "final",
            "outtarget": "swap"
        },
        {
-           "name": "blit",
+           "name": "poweritems:blit",
            "intarget": "swap", 
            "outtarget": "final"
        }
