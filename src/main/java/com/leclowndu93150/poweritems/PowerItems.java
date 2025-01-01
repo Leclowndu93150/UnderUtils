@@ -4,6 +4,7 @@ import com.leclowndu93150.poweritems.client.NightVisionClientHandler;
 import com.leclowndu93150.poweritems.register.PCreativeTabs;
 import com.leclowndu93150.poweritems.register.PDataComponents;
 import com.leclowndu93150.poweritems.register.PItems;
+import com.leclowndu93150.poweritems.util.ShaderPackExtractor;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -20,7 +21,7 @@ public class PowerItems {
         PDataComponents.COMPONENTS.register(modEventBus);
         modEventBus.addListener(NightVisionClientHandler::onClientSetup);
         NightVisionClientHandler.init();
-
+        //ShaderPackExtractor.extractShaderPack(MODID, "Flashlight-Shader-v1.0.1");
     }
 
 }
