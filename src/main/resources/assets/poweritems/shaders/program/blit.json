@@ -1,11 +1,12 @@
 {
+  "type": "effect_program",
   "blend": {
     "func": "add",
     "srcrgb": "one",
     "dstrgb": "zero"
   },
-  "vertex": "blit",
-  "fragment": "blit",
+  "vertex": "poweritems:blit",
+  "fragment": "poweritems:blit",
   "attributes": [ "Position" ],
   "samplers": [
     { "name": "DiffuseSampler" }

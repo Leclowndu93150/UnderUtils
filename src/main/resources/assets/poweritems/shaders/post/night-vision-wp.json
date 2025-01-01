@@ -1,0 +1,15 @@
+{
+    "targets": ["swap"],
+    "passes": [
+        {
+            "name": "poweritems:night-vision-wp",
+            "intarget": "minecraft:main",
+            "outtarget": "swap"
+        },
+        {
+            "name": "poweritems:blit",
+            "intarget": "swap",
+            "outtarget": "minecraft:main"
+        }
+    ]
+}

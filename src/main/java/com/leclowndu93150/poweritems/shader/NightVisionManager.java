@@ -28,8 +28,8 @@ public class NightVisionManager {
             boolean isEnabled = helmet.getItem() instanceof NightVisionGogglesItem &&
                     helmet.getOrDefault(PDataComponents.ENABLED.get(), false);
 
-            shader.safeGetUniform("NVEnabled").set(isEnabled ? 1 : 0);
-            shader.safeGetUniform("GameTime").set((float) (System.currentTimeMillis() % 1000000) / 1000.0f);
+            shader.safeGetUniform("NightVisionEnabled").set(isEnabled ? 1 : 0);
+            shader.safeGetUniform("Time").set((float) (System.currentTimeMillis() % 1000000) / 1000.0f);
         }
     }
 }

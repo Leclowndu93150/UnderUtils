@@ -23,7 +23,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import org.lwjgl.glfw.GLFW;
 
 public class NightVisionClientHandler {
-    private static final ResourceLocation NIGHT_VISION_SHADER = ResourceLocation.fromNamespaceAndPath("poweritems", "night_vision");
+    private static final ResourceLocation NIGHT_VISION_SHADER = ResourceLocation.fromNamespaceAndPath("poweritems", "shaders/post/night-vision-wp");
     private static GameRenderer gameRenderer;
 
     public static final KeyMapping TOGGLE_NIGHT_VISION = new KeyMapping(
