@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 @Mod(PowerItems.MODID)
 public class PowerItems {
     public static final String MODID = "poweritems";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
     public PowerItems(IEventBus modEventBus, ModContainer modContainer) {
         PItems.ITEMS.register(modEventBus);
         PCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
