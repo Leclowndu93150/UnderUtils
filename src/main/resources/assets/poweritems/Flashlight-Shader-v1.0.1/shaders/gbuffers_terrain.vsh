@@ -21,6 +21,7 @@ void main() {
     vertexDistance = length((gl_ModelViewMatrix * gl_Vertex).xyz);
     if ((distanceToView < FLASHLIGHT_BEAM_WIDTH) && (heldBlockLightValue > 0) && (vertexDistance < FLASHLIGHT_DISTANCE)) {
         flashlightLightStrength = smoothstep(0.0, 1.0, (1.0-(vertexDistance/FLASHLIGHT_DISTANCE)));
+        flashlightLightStrength += smoothstep(1, 0, distanceToView);
     } else {
         flashlightLightStrength = 0.0;
     }
