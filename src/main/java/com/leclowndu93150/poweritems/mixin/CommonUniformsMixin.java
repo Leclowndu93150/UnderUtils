@@ -18,6 +18,6 @@ public class CommonUniformsMixin {
     @Inject(method = "generalCommonUniforms", at = @At("RETURN"))
     private static void injectFlashlightUniform(UniformHolder uniforms, FrameUpdateNotifier updateNotifier, PackDirectives directives, CallbackInfo ci) {
         uniforms.uniform1f(PER_FRAME, "flashlightEnabled", () -> FlashlightManager.getInstance().isFlashlightEnabled() ? 1.0f : 0.0f);
-        uniforms.uniform1f(PER_FRAME,"NIGHT_VISION_ENABLED", () -> NightVisionManager.getInstance().isNightVisionEnabled() ? (int)1.0f : 0);
+        uniforms.uniform1f(PER_FRAME,"NIGHT_VISION_ENABLED", () -> NightVisionManager.getInstance().isNightVisionEnabled() ? 1.0f : 0.0f);
     }
 }
