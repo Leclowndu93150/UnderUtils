@@ -50,8 +50,8 @@ public class FlashlightItem extends Item implements IEnergyStorage {
 
             FlashlightManager.getInstance().setFlashlightEnabled(isEnabled && currentEnergy > 0);
             FlashlightManager.getInstance().setFlashlightPower(currentEnergy);
-
-            if (isEnabled && currentEnergy > 0 && (isSelected || player.getOffhandItem() == stack)) {
+            //if (isEnabled && currentEnergy > 0 && (isSelected || player.getOffhandItem() == stack)) {
+            if (isEnabled && currentEnergy > 0) {
                 currentEnergy -= ENERGY_USAGE;
                 stack.set(PDataComponents.ENERGY.get(), currentEnergy);
 
