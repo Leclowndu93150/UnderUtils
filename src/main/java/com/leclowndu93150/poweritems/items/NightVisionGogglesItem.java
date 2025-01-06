@@ -1,5 +1,6 @@
 package com.leclowndu93150.poweritems.items;
 
+import com.leclowndu93150.poweritems.api.ITimeBasedItem;
 import com.leclowndu93150.poweritems.register.PDataComponents;
 import com.leclowndu93150.poweritems.shader.NightVisionManager;
 import com.leclowndu93150.poweritems.util.PowerUtils;

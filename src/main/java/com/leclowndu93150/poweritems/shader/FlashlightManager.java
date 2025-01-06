@@ -4,6 +4,7 @@ public class FlashlightManager {
     private static final FlashlightManager INSTANCE = new FlashlightManager();
     private boolean flashlightEnabled = false;
     private float flashlightPower = 0.0f;
+    private Object activeSource;
 
     private FlashlightManager() {}
 
@@ -15,8 +16,14 @@ public class FlashlightManager {
         return flashlightEnabled;
     }
 
-    public void setFlashlightEnabled(boolean enabled) {
-        this.flashlightEnabled = enabled;
+    public void setFlashlightEnabled(boolean enabled, Object source) {
+        if (enabled) {
+            activeSource = source;
+            flashlightEnabled = true;
+        } else if (source == activeSource) {
+            activeSource = null;
+            flashlightEnabled = false;
+        }
     }
 
     public float getFlashlightPower() {
@@ -27,4 +34,3 @@ public class FlashlightManager {
         this.flashlightPower = power;
     }
 }
-

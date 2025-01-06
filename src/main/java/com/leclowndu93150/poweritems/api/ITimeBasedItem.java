@@ -1,4 +1,4 @@
-package com.leclowndu93150.poweritems.items;
+package com.leclowndu93150.poweritems.api;
 
 import com.leclowndu93150.poweritems.register.PDataComponents;
 import com.leclowndu93150.poweritems.util.PowerUtils;

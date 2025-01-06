@@ -11,6 +11,10 @@ public class PowerUtils {
         return ticks / TICKS_PER_MINUTE;
     }
 
+    public static int secondsToTicks(int seconds) {
+        return seconds * 20;
+    }
+
     public static int getTimeBarWidth(int currentTicks, int maxTicks) {
         return Math.round(13.0F * currentTicks / maxTicks);
     }
