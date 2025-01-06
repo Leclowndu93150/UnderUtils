@@ -1,6 +1,7 @@
 package com.leclowndu93150.poweritems.mixin;
 
 import com.leclowndu93150.poweritems.shader.FlashlightManager;
+import com.leclowndu93150.poweritems.shader.NightVisionManager;
 import net.irisshaders.iris.gl.uniform.UniformHolder;
 import net.irisshaders.iris.shaderpack.properties.PackDirectives;
 import net.irisshaders.iris.uniforms.CommonUniforms;
@@ -17,6 +18,6 @@ public class CommonUniformsMixin {
     @Inject(method = "generalCommonUniforms", at = @At("RETURN"))
     private static void injectFlashlightUniform(UniformHolder uniforms, FrameUpdateNotifier updateNotifier, PackDirectives directives, CallbackInfo ci) {
         uniforms.uniform1f(PER_FRAME, "flashlightEnabled", () -> FlashlightManager.getInstance().isFlashlightEnabled() ? 1.0f : 0.0f);
-        uniforms.uniform1f(PER_FRAME, "flashlightPower", () -> FlashlightManager.getInstance().getFlashlightPower());
+        uniforms.uniform1f(PER_FRAME,"NIGHT_VISION_ENABLED", () -> NightVisionManager.getInstance().isNightVisionEnabled() ? (int)1.0f : 0);
     }
 }

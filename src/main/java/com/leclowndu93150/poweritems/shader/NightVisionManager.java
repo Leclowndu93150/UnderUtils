@@ -1,35 +1,29 @@
 package com.leclowndu93150.poweritems.shader;
 
-import net.minecraft.client.renderer.ShaderInstance;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ItemStack;
-import com.leclowndu93150.poweritems.items.NightVisionGogglesItem;
-import com.leclowndu93150.poweritems.register.PDataComponents;
-
 public class NightVisionManager {
-    public static final NightVisionManager INSTANCE = new NightVisionManager();
-    private ShaderInstance shader;
+    private static final NightVisionManager INSTANCE = new NightVisionManager();
+    private boolean nightVisionEnabled = false;
+    private float nightVisionPower = 0.0f;
 
     private NightVisionManager() {}
 
-    public void setShader(ShaderInstance shader) {
-        this.shader = shader;
+    public static NightVisionManager getInstance() {
+        return INSTANCE;
     }
 
-    public ShaderInstance getShader() {
-        return shader;
+    public boolean isNightVisionEnabled() {
+        return nightVisionEnabled;
     }
 
-    public void updateUniforms(Player player) {
-        if (shader != null && player != null) {
-            System.out.println("Updating uniforms");
-            ItemStack helmet = player.getItemBySlot(EquipmentSlot.HEAD);
-            boolean isEnabled = helmet.getItem() instanceof NightVisionGogglesItem &&
-                    helmet.getOrDefault(PDataComponents.ENABLED.get(), false);
+    public void setNightVisionEnabled(boolean enabled) {
+        this.nightVisionEnabled = enabled;
+    }
 
-            shader.safeGetUniform("NightVisionEnabled").set(isEnabled ? 1 : 0);
-            shader.safeGetUniform("Time").set((float) (System.currentTimeMillis() % 1000000) / 1000.0f);
-        }
+    public float getNightVisionPower() {
+        return nightVisionPower;
+    }
+
+    public void setNightVisionPower(float power) {
+        this.nightVisionPower = power;
     }
 }

@@ -2,6 +2,8 @@ package com.leclowndu93150.poweritems.items;
 
 import com.leclowndu93150.poweritems.RandomUtils;
 import com.leclowndu93150.poweritems.register.PDataComponents;
+import com.leclowndu93150.poweritems.shader.FlashlightManager;
+import com.leclowndu93150.poweritems.shader.NightVisionManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -38,6 +40,7 @@ public class NightVisionGogglesItem extends ArmorItem implements IEnergyStorage 
             int currentEnergy = stack.getOrDefault(PDataComponents.ENERGY.get(), 0);
 
             if (isEnabled) {
+                NightVisionManager.getInstance().setNightVisionEnabled(isEnabled && currentEnergy > 0);
                 if (currentEnergy <= 0) {
                     disableGoggles(stack, player, level);
                 } else if (level.getGameTime() % 20 == 0) {
@@ -52,6 +55,7 @@ public class NightVisionGogglesItem extends ArmorItem implements IEnergyStorage 
 
     private void disableGoggles(ItemStack stack, Player player, Level level) {
         stack.set(PDataComponents.ENABLED.get(), false);
+        NightVisionManager.getInstance().setNightVisionEnabled(false);
         stack.set(PDataComponents.ENERGY.get(), 0);
         player.displayClientMessage(Component.translatable("message.poweritems.goggles.no_power")
                 .withStyle(ChatFormatting.RED), true);
