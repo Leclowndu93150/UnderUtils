@@ -1,5 +1,6 @@
 {
-  "itemGroup.poweritems": "Example Mod Tab",
-  "block.poweritems.example_block": "Example Block",
-  "item.poweritems.example_item": "Example Item"
+  "item.poweritems.flashlight": "Flashlight",
+  "items.poweritems.battery": "Battery",
+  "items.poweritems.night_vision_goggles": "Night Vision Goggles",
+  "items.poweritems.windup_flashlight": "Wind-Up Flashlight"
 }

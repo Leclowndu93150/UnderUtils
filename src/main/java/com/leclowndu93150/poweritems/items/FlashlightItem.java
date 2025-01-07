@@ -85,6 +85,11 @@ public class FlashlightItem extends Item implements ITimeBasedItem {
         }
     }
 
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return false;
+    }
+
     private boolean isInOffhand(Player player, ItemStack stack) {
         return player.getOffhandItem() == stack;
     }

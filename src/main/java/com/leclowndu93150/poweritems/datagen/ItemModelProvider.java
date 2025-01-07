@@ -35,15 +35,15 @@ public class ItemModelProvider extends net.neoforged.neoforge.client.model.gener
         ResourceLocation location = BuiltInRegistries.ITEM.getKey(item);
         ResourceLocation is_on = ResourceLocation.fromNamespaceAndPath(PowerItems.MODID, "enabled");
         getBuilder(location.toString())
-                .parent(new ModelFile.UncheckedModelFile("item/generated"))
+                .parent(new ModelFile.UncheckedModelFile("item/handheld"))
                 .override()
-                .model(basicItem(item, "_off")
+                .model(handHeldItem(item, "_off")
                         .texture("layer0", itemTexture(item, "_off"))
                 )
                 .predicate(is_on, 0)
                 .end()
                 .override()
-                .model(basicItem(item, "_on")
+                .model(handHeldItem(item, "_on")
                         .texture("layer0", itemTexture(item, "_on")))
                 .predicate(is_on, 1)
                 .end();
@@ -57,55 +57,6 @@ public class ItemModelProvider extends net.neoforged.neoforge.client.model.gener
 
     private static @NotNull ResourceLocation key(ItemLike item) {
         return BuiltInRegistries.ITEM.getKey(item.asItem());
-    }
-
-    public ItemModelBuilder parentItemBlock(Item item, ResourceLocation loc) {
-        ResourceLocation name = Objects.requireNonNull(BuiltInRegistries.ITEM.getKey(item));
-        return getBuilder(name.toString())
-                .parent(new ModelFile.UncheckedModelFile(loc));
-    }
-
-    public ItemModelBuilder parentItemBlock(Item item) {
-        return parentItemBlock(item, "");
-    }
-
-    public ItemModelBuilder parentItemBlock(Item item, String suffix) {
-        ResourceLocation name = Objects.requireNonNull(BuiltInRegistries.ITEM.getKey(item));
-        return getBuilder(name.toString())
-                .parent(new ModelFile.UncheckedModelFile(ResourceLocation.fromNamespaceAndPath(name.getNamespace(), "block/" + name.getPath() + suffix)));
-    }
-
-    public void petriDishItem(Item item) {
-        ResourceLocation location = BuiltInRegistries.ITEM.getKey(item);
-        ResourceLocation is_on = ResourceLocation.fromNamespaceAndPath(PowerItems.MODID, "is_on");
-        getBuilder(location.toString())
-                .parent(new ModelFile.UncheckedModelFile("item/generated"))
-                .override()
-                .model(basicItem(item))
-                .predicate(is_on, 0)
-                .end()
-                .override()
-                .model(basicItem(item, "_bacteria")
-                        .texture("layer1", itemTexture(item, "_overlay")))
-                .predicate(is_on, 1)
-                .end()
-                .texture("layer0", itemTexture(item, ""));
-    }
-
-    public void aquarineSteelTool(Item item) {
-        ResourceLocation location = BuiltInRegistries.ITEM.getKey(item);
-        ResourceLocation enabled = ResourceLocation.fromNamespaceAndPath(PowerItems.MODID, "enabled");
-        getBuilder(location.toString())
-                .parent(new ModelFile.UncheckedModelFile("item/handheld"))
-                .override()
-                .model(handHeldItem(item))
-                .predicate(enabled, 0)
-                .end()
-                .override()
-                .model(handHeldItem(item, "_enabled"))
-                .predicate(enabled, 1)
-                .end()
-                .texture("layer0", ResourceLocation.fromNamespaceAndPath(location.getNamespace(), "item/" + location.getPath()));
     }
 
     public ItemModelBuilder handHeldItem(Item item) {

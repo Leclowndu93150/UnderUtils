@@ -63,7 +63,7 @@ public class BatteryItem extends Item implements ITimeBasedItem {
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
         if (!level.isClientSide && entity instanceof Player player
-                && level.getGameTime() % 20 == 0
+                && level.getGameTime() % 10 == 0
                 && stack.getOrDefault(PDataComponents.ENABLED.get(), false)) {
 
             int timeLeft = stack.getOrDefault(PDataComponents.TIME.get(), 0);
@@ -97,6 +97,11 @@ public class BatteryItem extends Item implements ITimeBasedItem {
         if (item instanceof FlashlightItem) return PowerUtils.minutesToTicks(5);
         if (item instanceof NightVisionGogglesItem) return PowerUtils.minutesToTicks(15);
         return 0;
+    }
+
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return false;
     }
 
     @Override

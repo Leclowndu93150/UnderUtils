@@ -1,10 +1,25 @@
 screen.FLASHLIGHT_OPTIONS = Flashlight Options
 screen.MEGA_DARKNESS = Mega Darkness
+screen.NIGHT_VISION = Night Vision
 
 option.MEGA_DARKNESS_ENABLED = Enable Mega Darkness
 value.MEGA_DARKNESS_ENABLED.0 = False
 value.MEGA_DARKNESS_ENABLED.1 = True
 option.MEGA_DARKNESS_INTENSITY = Mega Darkness Intensity
+
+option.NIGHT_VISION_ENABLED = Enable Night Vision
+value.NIGHT_VISION_ENABLED.0 = False
+value.NIGHT_VISION_ENABLED.1 = True
+
+option.NOISE_INTENSITY = Noise Intensity
+option.VIGNETTE_STRENGTH = Vignette Strength
+option.NV_TINT_R = Night Vision Red Tint
+suffix.NV_TINT_R=%
+option.NV_TINT_G = Night Vision Green Tint
+suffix.NV_TINT_G=%
+option.NV_TINT_B = Night Vision Blue Tint
+suffix.NV_TINT_B=%
+option.NV_FALLOFF = Night Vision Falloff
 
 option.FLASHLIGHT_COLOR_R = Flashlight red amount
 suffix.FLASHLIGHT_COLOR_R=%

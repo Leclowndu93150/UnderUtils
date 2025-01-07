@@ -25,22 +25,22 @@ void main() {
     float vertexDistance = length((gl_ModelViewMatrix * vec4(fragPos, 1.0)).xyz);
     float flashlightLightStrength = 0.0;
 
-    if ((heldBlockLightValue > 0) && (vertexDistance < FLASHLIGHT_DISTANCE)) {
+    if ((flashlightEnabled > 0.5) && (vertexDistance < FLASHLIGHT_DISTANCE)) {
         float distanceAttenuation = smoothstep(0.0, 1.0, (1.0 - (vertexDistance / FLASHLIGHT_DISTANCE)));
         float closeBonus = smoothstep(5.0, 0.0, vertexDistance) * 2.0; // Multiply by 2.0 to amplify close-range effect
         flashlightLightStrength = (distanceAttenuation + closeBonus) * edgeAttenuation;
     }
 
     pixelColor = commonFsh(texCoord,
-                           lightCoord,
-                           vertexColor,
-                           vertexDistance,
-                           flashlightLightStrength,
-                           moonLighting,
-                           gtexture,
-                           lightmap,
-                           nightVision,
-                           fogStart,
-                           fogEnd,
-                           fogColor);
+                       lightCoord,
+                       vertexColor,
+                       vertexDistance,
+                       flashlightLightStrength,
+                       moonLighting,
+                       gtexture,
+                       lightmap,
+                       nightVision,
+                       fogStart,
+                       fogEnd,
+                       fogColor);
 }
