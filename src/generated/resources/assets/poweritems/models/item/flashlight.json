@@ -1,0 +1,17 @@
+{
+  "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "poweritems:item/flashlight_off",
+      "predicate": {
+        "poweritems:enabled": 0.0
+      }
+    },
+    {
+      "model": "poweritems:item/flashlight_on",
+      "predicate": {
+        "poweritems:enabled": 1.0
+      }
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+// 1.21.1	2025-01-07T17:51:58.4367108	Item Models: poweritems
+2dc646b620bc66e29ceb5ccebd7b285c1b204528 assets/poweritems/models/item/battery.json
+4490f77e9f94a118da434e3433b60f432fad9409 assets/poweritems/models/item/flashlight.json
+e7b74a146ec8dbacc7ec6d23f1db47e3c5c02b40 assets/poweritems/models/item/flashlight_off.json
+85552f9294e03a0fb975288c4b6fa05886b2b581 assets/poweritems/models/item/flashlight_on.json
+c48e7211a7e127914e81f153023d43738a548049 assets/poweritems/models/item/night_vision_goggles.json
+a38c59768e220cc3d6ff3d4ede53b4e48a644349 assets/poweritems/models/item/windup_flashlight.json
+0d86194cde15b7ef0bf670a1ece6e92be7715b23 assets/poweritems/models/item/windup_flashlight_off.json
+cbfb26963a16105673363a2eb9beb701337e9f2c assets/poweritems/models/item/windup_flashlight_on.json
