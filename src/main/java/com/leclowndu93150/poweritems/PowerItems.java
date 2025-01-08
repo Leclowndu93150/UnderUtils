@@ -24,6 +24,8 @@ public class PowerItems {
 
         modEventBus.addListener(PKeyMappings::register);
         modEventBus.addListener(ClientEvents::onFMLClientSetupEvent);
+        modEventBus.addListener(ClientEvents::registerClientExtensions);
+        modEventBus.addListener(ClientEvents::registerLayerDefinitions);
 
         PCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         PDataComponents.COMPONENTS.register(modEventBus);
