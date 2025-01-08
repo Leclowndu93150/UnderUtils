@@ -9,6 +9,7 @@ import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import org.slf4j.Logger;
 
@@ -25,6 +26,8 @@ public class PowerItems {
         PCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         PDataComponents.COMPONENTS.register(modEventBus);
         //ShaderPackExtractor.extractShaderPack(MODID, "Flashlight-Shader-v1.0.1");
+
+        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
 }

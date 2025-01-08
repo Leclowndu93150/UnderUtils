@@ -1,5 +1,6 @@
 package com.leclowndu93150.poweritems.items;
 
+import com.leclowndu93150.poweritems.api.IBatteryBasedItem;
 import com.leclowndu93150.poweritems.api.ITimeBasedItem;
 import com.leclowndu93150.poweritems.register.PDataComponents;
 import com.leclowndu93150.poweritems.shader.FlashlightManager;
@@ -19,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class WindupFlashlightItem extends Item implements ITimeBasedItem {
-    private static final int MAX_MINUTES = 5;
+    public static final int MAX_MINUTES = 5;
     private static final int CHARGE_TICKS = 20;
     private final int maxTicks;
 
@@ -28,6 +29,11 @@ public class WindupFlashlightItem extends Item implements ITimeBasedItem {
                 .component(PDataComponents.ENABLED.get(), false)
                 .stacksTo(1));
         this.maxTicks = PowerUtils.minutesToTicks(MAX_MINUTES);
+    }
+
+    @Override
+    public int getMaxTime() {
+        return maxTicks;
     }
 
     @Override

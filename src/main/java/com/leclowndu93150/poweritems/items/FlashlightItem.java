@@ -1,9 +1,12 @@
 package com.leclowndu93150.poweritems.items;
 
-import com.leclowndu93150.poweritems.api.ITimeBasedItem;
+import com.leclowndu93150.poweritems.api.IBatteryBasedItem;
+import com.leclowndu93150.poweritems.capabilities.BatteryStorage;
+import com.leclowndu93150.poweritems.capabilities.IBatteryStorage;
+import com.leclowndu93150.poweritems.register.ComponentBatteryStorage;
+import com.leclowndu93150.poweritems.register.PDataComponentsUtils;
 import com.leclowndu93150.poweritems.register.PDataComponents;
 import com.leclowndu93150.poweritems.shader.FlashlightManager;
-import com.leclowndu93150.poweritems.util.PowerUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -17,20 +20,19 @@ import net.minecraft.world.level.Level;
 import java.util.Collections;
 import java.util.List;
 
-public class FlashlightItem extends Item implements ITimeBasedItem {
-    private static final int MAX_MINUTES = 5;
-    private final int maxTicks;
+public class FlashlightItem extends Item implements IBatteryBasedItem {
+    public IBatteryStorage batteryStorage;
 
     public FlashlightItem(Properties props) {
-        super(props.component(PDataComponents.TIME.get(), PowerUtils.minutesToTicks(MAX_MINUTES))
+        super(props
                 .component(PDataComponents.ENABLED.get(), false)
+                .component(PDataComponents.BATTERY.get(), new ComponentBatteryStorage(new BatteryStorage(1, true)))
                 .stacksTo(1));
-        this.maxTicks = PowerUtils.minutesToTicks(MAX_MINUTES);
     }
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        Collections.addAll(tooltipComponents, getTimeTooltip(stack));
+        Collections.addAll(tooltipComponents, getBatteryTooltip(stack));
     }
 
     @Override
@@ -40,7 +42,7 @@ public class FlashlightItem extends Item implements ITimeBasedItem {
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        return getTimeBarWidth(stack, maxTicks);
+        return getTimeBarWidth(stack);
     }
 
     @Override
@@ -51,7 +53,7 @@ public class FlashlightItem extends Item implements ITimeBasedItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getOrDefault(PDataComponents.TIME.get(), 0) > 0) {
+        if (PDataComponentsUtils.getBatteryStorageComponent(stack).getTotalCharge() > 0) {
             if (!level.isClientSide) {
                 boolean current = stack.getOrDefault(PDataComponents.ENABLED.get(), false);
                 stack.set(PDataComponents.ENABLED.get(), !current);
@@ -64,10 +66,10 @@ public class FlashlightItem extends Item implements ITimeBasedItem {
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
         if (!level.isClientSide && entity instanceof Player player) {
+            BatteryStorage bs = stack.get(PDataComponents.BATTERY).batteryStorage().copy();
             boolean isEnabled = stack.getOrDefault(PDataComponents.ENABLED.get(), false);
-            int timeLeft = stack.getOrDefault(PDataComponents.TIME.get(), 0);
 
-            boolean isActive = (selected || isInOffhand(player, stack)) && isEnabled && timeLeft > 0;
+            boolean isActive = (selected || isInOffhand(player, stack)) && isEnabled && bs.getTotalCharge() > 0;
             FlashlightManager.getInstance().setFlashlightEnabled(isActive,this);
 
             if (!selected && !isInOffhand(player, stack)) {
@@ -76,12 +78,14 @@ public class FlashlightItem extends Item implements ITimeBasedItem {
             }
 
             if (isActive) {
-                timeLeft--;
-                stack.set(PDataComponents.TIME.get(), timeLeft);
-                if (timeLeft <= 0) {
-                    stack.set(PDataComponents.ENABLED.get(), false);
+                if (level.getGameTime() % 20 == 0) {
+                    bs.removeCharge(20);
+                    if (bs.getTotalCharge() <= 0) {
+                        stack.set(PDataComponents.ENABLED.get(), false);
+                    }
                 }
             }
+            stack.set(PDataComponents.BATTERY, new ComponentBatteryStorage(bs));
         }
     }
 

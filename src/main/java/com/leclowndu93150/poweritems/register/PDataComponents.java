@@ -1,5 +1,6 @@
 package com.leclowndu93150.poweritems.register;
 
+import com.leclowndu93150.poweritems.register.ComponentBatteryStorage;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -15,11 +16,19 @@ public class PDataComponents {
 
     public static final Supplier<DataComponentType<Integer>> TIME =
             COMPONENTS.registerComponentType("time",
-                    builder -> builder.persistent(Codec.INT)
-                            .networkSynchronized(ByteBufCodecs.INT));
+                    builder -> builder
+                    .persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.INT));
 
     public static final Supplier<DataComponentType<Boolean>> ENABLED =
             COMPONENTS.registerComponentType("enabled",
-                    builder -> builder.persistent(Codec.BOOL)
-                            .networkSynchronized(ByteBufCodecs.BOOL));
+                    builder -> builder
+                    .persistent(Codec.BOOL)
+                    .networkSynchronized(ByteBufCodecs.BOOL));
+
+    public static final Supplier<DataComponentType<ComponentBatteryStorage>> BATTERY =
+            COMPONENTS.registerComponentType("battery",
+            builder -> builder
+                    .persistent(ComponentBatteryStorage.CODEC)
+                    .networkSynchronized(ComponentBatteryStorage.STREAM_CODEC));
 }

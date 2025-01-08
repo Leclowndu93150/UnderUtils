@@ -1,14 +1,12 @@
 package com.leclowndu93150.poweritems.items;
 
 import com.leclowndu93150.poweritems.Config;
-import com.leclowndu93150.poweritems.api.BatteryInstance;
 import com.leclowndu93150.poweritems.api.IBatteryBasedItem;
-import com.leclowndu93150.poweritems.api.ITimeBasedItem;
 import com.leclowndu93150.poweritems.capabilities.BatteryStorage;
 import com.leclowndu93150.poweritems.capabilities.IBatteryStorage;
 import com.leclowndu93150.poweritems.register.ComponentBatteryStorage;
-import com.leclowndu93150.poweritems.register.PCapabilities;
 import com.leclowndu93150.poweritems.register.PDataComponents;
+import com.leclowndu93150.poweritems.register.PDataComponentsUtils;
 import com.leclowndu93150.poweritems.util.PowerUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -24,22 +22,19 @@ import net.minecraft.world.level.Level;
 import java.util.Collections;
 import java.util.List;
 
-public class BatteryItem extends Item implements ITimeBasedItem {
-    public BatteryItem(Properties props) {
-        super(props
-                .stacksTo(1)
-                .component(PDataComponents.TIME.get(), Config.batteryCapacity)
-        );
-    }
+public class BatteryPackItem extends Item implements IBatteryBasedItem {
+    public IBatteryStorage batteryStorage;
 
-    @Override
-    public int getMaxTime() {
-        return Config.batteryCapacity;
+    public BatteryPackItem(Properties props) {
+        super(props
+                .component(PDataComponents.ENABLED.get(), false)
+                .component(PDataComponents.BATTERY.get(), new ComponentBatteryStorage(new BatteryStorage(6, true)))
+                .stacksTo(1));
     }
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        Collections.addAll(tooltipComponents, getTimeTooltip(stack));
+        Collections.addAll(tooltipComponents, getBatteryTooltip(stack));
         tooltipComponents.add(Component.literal("Shift + Right-click to toggle charging")
                 .withStyle(ChatFormatting.GRAY));
     }
@@ -51,7 +46,7 @@ public class BatteryItem extends Item implements ITimeBasedItem {
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        return getTimeBarWidth(stack, Config.batteryCapacity);
+        return getTimeBarWidth(stack);
     }
 
     @Override
@@ -61,29 +56,17 @@ public class BatteryItem extends Item implements ITimeBasedItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        ItemStack offhandStack = player.getOffhandItem();
         ItemStack stack = player.getItemInHand(hand);
-
         if (player.isShiftKeyDown()) {
-            if (offhandStack.getItem() instanceof IBatteryBasedItem) {
-                BatteryStorage offHandBS = offhandStack.get(PDataComponents.BATTERY).batteryStorage().copy();
-                if (offHandBS.getBattery(offHandBS.getEmptyOrLowest()) != BatteryInstance.EMPTY) {
-                    BatteryInstance oldBattery = offHandBS.getBattery(offHandBS.getEmptyOrLowest());
-
-                    offHandBS.setBattery(offHandBS.getEmptyOrLowest(), new BatteryInstance(stack.get(PDataComponents.TIME.get())));
-
-                    offhandStack.set(PDataComponents.BATTERY, new ComponentBatteryStorage(offHandBS));
-                    stack.set(PDataComponents.TIME, oldBattery.getCharge());
-                } else {
-                    offHandBS.setBattery(offHandBS.getEmptyOrLowest(), new BatteryInstance(stack.get(PDataComponents.TIME.get())));
-
-                    offhandStack.set(PDataComponents.BATTERY, new ComponentBatteryStorage(offHandBS));
-                    stack.setCount(0);
-                }
-            }
+            stack.set(PDataComponents.ENABLED.get(), !stack.getOrDefault(PDataComponents.ENABLED.get(), false));
             return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
-        }
+        } else {
+            BatteryStorage batteryStorage = PDataComponentsUtils.getBatteryStorageComponent(stack);
 
+            for (int i = 0; i < batteryStorage.getBatterySlots(); i++) {
+                System.out.println("Battery " + i + ": " + batteryStorage.getBattery(i).getCharge());
+            }
+        }
         return InteractionResultHolder.pass(stack);
     }
 
@@ -93,30 +76,28 @@ public class BatteryItem extends Item implements ITimeBasedItem {
                 && level.getGameTime() % 10 == 0
                 && stack.getOrDefault(PDataComponents.ENABLED.get(), false)) {
 
-            int timeLeft = stack.getOrDefault(PDataComponents.TIME.get(), 0);
-            if (timeLeft <= 0) return;
+            BatteryStorage sourceBS = stack.get(PDataComponents.BATTERY).batteryStorage().copy();
 
             for (ItemStack targetStack : player.getInventory().items) {
                 if (!isValidTarget(targetStack, stack)) continue;
 
-                int targetTime = targetStack.getOrDefault(PDataComponents.TIME.get(), 0);
-                int maxTime = getMaxTimeForItem(targetStack.getItem());
+                BatteryStorage targetBS = targetStack.get(PDataComponents.BATTERY).batteryStorage().copy();
 
-                if (targetTime >= maxTime) continue;
+                if (targetBS.getTotalCharge() == Config.batteryCapacity * targetBS.getBatterySlots()) continue;
 
-                int transferAmount = Math.min(20, Math.min(timeLeft, maxTime - targetTime));
-                targetStack.set(PDataComponents.TIME.get(), targetTime + transferAmount);
-                timeLeft -= transferAmount;
-                stack.set(PDataComponents.TIME.get(), timeLeft);
+                sourceBS.getBattery(targetBS.getMostCharged()).removeCharge(20);
+                targetBS.getBattery(targetBS.getEmptyOrLowest()).addCharge(20);
 
-                if (timeLeft <= 0) break;
+                stack.set(PDataComponents.BATTERY, new ComponentBatteryStorage(sourceBS));
+                targetStack.set(PDataComponents.BATTERY, new ComponentBatteryStorage(targetBS));
             }
         }
     }
 
     private boolean isValidTarget(ItemStack target, ItemStack source) {
         return target != source
-                && target.getItem() instanceof IBatteryBasedItem;
+                && target.getItem() instanceof IBatteryBasedItem
+                && !(target.getItem() instanceof BatteryPackItem);
     }
 
     private int getMaxTimeForItem(Item item) {

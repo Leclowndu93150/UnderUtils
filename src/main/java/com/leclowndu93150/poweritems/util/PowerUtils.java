@@ -20,8 +20,16 @@ public class PowerUtils {
     }
 
     public static String formatTimeRemaining(int ticks) {
-        int minutes = ticksToMinutes(ticks);
+        int hours = ticks / (TICKS_PER_MINUTE * 60);
+        int minutes = (ticks % (TICKS_PER_MINUTE * 60)) / TICKS_PER_MINUTE;
         int seconds = (ticks % TICKS_PER_MINUTE) / 20;
-        return String.format("%02d:%02d", minutes, seconds);
+
+        if (hours > 0) {
+            return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        } else if (minutes > 0) {
+            return String.format("%02d:%02d", minutes, seconds);
+        } else {
+            return String.format("%02d", seconds);
+        }
     }
 }
