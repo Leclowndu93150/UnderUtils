@@ -13,6 +13,8 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -41,6 +43,10 @@ public record TogglePayload(String equipment_slot) implements CustomPacketPayloa
             Item item = stack.getItem();
             if (item instanceof WindupFlashlightItem || item instanceof FlashlightItem || item instanceof NightVisionGogglesItem || item instanceof BatteryPackItem) {
                 stack.set(PDataComponents.ENABLED.get(), !stack.get(PDataComponents.ENABLED.get()).booleanValue());
+
+                context.player().level().playSound(null, context.player().getX(), context.player().getY(), context.player().getZ(),
+                        SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS,
+                        0.5F, 0.4F / (context.player().level().getRandom().nextFloat() * 0.4F + 0.8F));
             }
         }).exceptionally(e -> {
             context.disconnect(Component.literal("action failed:  " + e.getMessage()));

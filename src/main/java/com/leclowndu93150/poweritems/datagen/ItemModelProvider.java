@@ -25,8 +25,8 @@ public class ItemModelProvider extends net.neoforged.neoforge.client.model.gener
     @Override
     protected void registerModels() {
         basicItem(PItems.BATTERY.get());
+        basicItem(PItems.BATTERY_PACK.get());
         basicItem(PItems.NIGHT_VISION_GOGGLES.get());
-
         poweredItem(PItems.FLASHLIGHT.get());
         poweredItem(PItems.WINDUP_FLASHLIGHT.get());
     }

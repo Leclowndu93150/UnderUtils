@@ -6,6 +6,7 @@ import com.leclowndu93150.poweritems.register.PDataComponents;
 import com.leclowndu93150.poweritems.register.PItems;
 import com.leclowndu93150.poweritems.register.PKeyMappings;
 import com.mojang.logging.LogUtils;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -31,4 +32,7 @@ public class PowerItems {
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
+    public static ResourceLocation rl(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MODID, path);
+    }
 }

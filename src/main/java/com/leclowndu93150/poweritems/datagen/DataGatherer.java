@@ -24,5 +24,6 @@ public class DataGatherer {
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
         generator.addProvider(event.includeClient(), new ItemModelProvider(output, existingFileHelper));
+        generator.addProvider(event.includeClient(), new EnUsProvider(output, "en_us"));
     }
 }
