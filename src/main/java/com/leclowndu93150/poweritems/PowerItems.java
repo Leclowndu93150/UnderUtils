@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 @Mod(PowerItems.MODID)
 public class PowerItems {
     public static final String MODID = "poweritems";
+    public static final String MODNAME = "Power Items";
     public static final Logger LOGGER = LogUtils.getLogger();
     public PowerItems(IEventBus modEventBus, ModContainer modContainer) {
         PItems.ITEMS.register(modEventBus);

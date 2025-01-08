@@ -4,6 +4,7 @@ import com.leclowndu93150.poweritems.PowerItems;
 import com.leclowndu93150.poweritems.api.IBatteryBasedItem;
 import com.leclowndu93150.poweritems.capabilities.ItemBatteryWrapper;
 import com.leclowndu93150.poweritems.items.FlashlightItem;
+import com.leclowndu93150.poweritems.networking.TogglePayload;
 import com.leclowndu93150.poweritems.register.PCapabilities;
 import com.leclowndu93150.poweritems.register.PDataComponents;
 import com.leclowndu93150.poweritems.register.PItems;
@@ -24,6 +25,8 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
+import net.neoforged.neoforge.common.util.Lazy;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.lwjgl.glfw.GLFW;
 
 @EventBusSubscriber(modid = PowerItems.MODID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
@@ -50,19 +53,11 @@ public class ClientEvents {
         if (player == null) return;
 
         if (TOGGLE_NIGHT_VISION.consumeClick()) {
-            toggleItem(player.getItemBySlot(EquipmentSlot.HEAD));
+            PacketDistributor.sendToServer(new TogglePayload(EquipmentSlot.HEAD.getName()));
         }
 
         if (TOGGLE_FLASHLIGHT.consumeClick()) {
-            toggleItem(findFlashlight(player));
-        }
-    }
-
-    private static void toggleItem(ItemStack stack) {
-        if (stack.has(PDataComponents.ENABLED.get())
-                && stack.getOrDefault(PDataComponents.TIME.get(), 0) > 0) {
-            stack.set(PDataComponents.ENABLED.get(),
-                    !stack.getOrDefault(PDataComponents.ENABLED.get(), false));
+            PacketDistributor.sendToServer(new TogglePayload(EquipmentSlot.MAINHAND.getName()));
         }
     }
 

@@ -55,7 +55,7 @@ public class NightVisionGogglesItem extends ArmorItem implements IBatteryBasedIt
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
         if (!level.isClientSide && entity instanceof Player player) {
-            BatteryStorage bs = stack.get(PDataComponents.BATTERY).batteryStorage();
+            BatteryStorage bs = stack.get(PDataComponents.BATTERY).batteryStorage().copy();
             ItemStack helmet = player.getItemBySlot(EquipmentSlot.HEAD);
             if (helmet != stack) {
                 NightVisionManager.getInstance().setNightVisionEnabled(false);
