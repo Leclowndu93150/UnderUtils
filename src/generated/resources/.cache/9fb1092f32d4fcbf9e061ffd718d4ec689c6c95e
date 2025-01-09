@@ -1,0 +1,9 @@
+// 1.21.1	2025-01-09T19:56:19.7927886	Recipes
+ecbd673e12b7ac2fa46f8a089c3728d695dfeae2 data/underutils/advancement/recipes/misc/battery_pack.json
+8de73ac5696d39367c83d0b6e5b92585ab7b6a63 data/underutils/advancement/recipes/misc/flashlight.json
+60bd7a7168d15484e6c7a79bf7a4a3df3427ea26 data/underutils/advancement/recipes/misc/night_vision_goggles.json
+c87174a0918a43a543968290e32ac6db4a098e33 data/underutils/advancement/recipes/misc/windup_flashlight.json
+72e1426f3099a355ba156cb0eedc07a4d83a5f32 data/underutils/recipe/battery_pack.json
+04eb07d0c2f9cedc7cb91658a7b1676696cb6700 data/underutils/recipe/flashlight.json
+680c0004f02867e5f6beed6eb808931030c23115 data/underutils/recipe/night_vision_goggles.json
+9b3357cc6b9f24e5203f4d0f544baabc02030f64 data/underutils/recipe/windup_flashlight.json

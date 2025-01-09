@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.monsoon.underutils.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "refmap": "underutils.refmap.json",
+  "mixins": [
+    "CommonUniformsMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

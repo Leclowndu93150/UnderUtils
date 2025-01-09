@@ -1,0 +1,17 @@
+{
+  "parent": "minecraft:item/handheld",
+  "overrides": [
+    {
+      "model": "underutils:item/flashlight_off",
+      "predicate": {
+        "underutils:enabled": 0.0
+      }
+    },
+    {
+      "model": "underutils:item/flashlight_on",
+      "predicate": {
+        "underutils:enabled": 1.0
+      }
+    }
+  ]
+}

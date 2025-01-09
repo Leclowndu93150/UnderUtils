@@ -1,9 +1,0 @@
-// 1.21.1	2025-01-09T17:56:24.5690277	Item Models: poweritems
-2dc646b620bc66e29ceb5ccebd7b285c1b204528 assets/poweritems/models/item/battery.json
-3f8eee4d675f2ab653bb83a3618b10a51027d512 assets/poweritems/models/item/battery_pack.json
-a6b93bc3a0a07be7a3843f8a9b2ccb77cc2559ba assets/poweritems/models/item/flashlight.json
-da8207f9a066bc5fb3f93d69c7e2a5640c96c171 assets/poweritems/models/item/flashlight_off.json
-4704203877be58b287d48a7b9e45b1095e5f5814 assets/poweritems/models/item/flashlight_on.json
-49fbb8e9a4397409e89fda2d9e280f1272573720 assets/poweritems/models/item/windup_flashlight.json
-12b0b67b4db84c7cfc682c099c47e10aa2720604 assets/poweritems/models/item/windup_flashlight_off.json
-5895dc1ceb8671cd4e9c060bd246528d5ec8583c assets/poweritems/models/item/windup_flashlight_on.json

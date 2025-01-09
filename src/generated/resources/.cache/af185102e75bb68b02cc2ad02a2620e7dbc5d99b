@@ -1,0 +1,9 @@
+// 1.21.1	2025-01-09T19:56:19.7897864	Item Models: underutils
+ed5dd6ac0b9eade5ac0728021946ae7ac8114f73 assets/underutils/models/item/battery.json
+542507e106c45f9181ac16d21ec83f8cb34936c4 assets/underutils/models/item/battery_pack.json
+330968949795094e2af4a5b4b1d2356b0fb48e30 assets/underutils/models/item/flashlight.json
+5b330bef3d8c31cd16d8ba8ee561e0c4682338cb assets/underutils/models/item/flashlight_off.json
+a6679cfabef7962732e1839dd9011bdc62eb393d assets/underutils/models/item/flashlight_on.json
+7b1082742e72733c57f300e65827e89448de96e9 assets/underutils/models/item/windup_flashlight.json
+60d1c3cc7ab520fd96e3a7cfbb2ee33209de3e59 assets/underutils/models/item/windup_flashlight_off.json
+977f2a66c50ba9b854ab4370a9433089241e8b0e assets/underutils/models/item/windup_flashlight_on.json
