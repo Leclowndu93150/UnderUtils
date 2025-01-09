@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "poweritems:item/night_vision_goggles"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1
+      },
+      "model": "poweritems:item/night_vision_goggles_head"
+    }
+  ]
+}

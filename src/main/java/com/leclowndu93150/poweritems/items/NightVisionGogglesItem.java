@@ -7,26 +7,25 @@ import com.leclowndu93150.poweritems.register.PDataComponents;
 import com.leclowndu93150.poweritems.register.PDataComponentsUtils;
 import com.leclowndu93150.poweritems.shader.NightVisionManager;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterials;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
 
-public class NightVisionGogglesItem extends ArmorItem implements IBatteryBasedItem {
+public class NightVisionGogglesItem extends Item implements IBatteryBasedItem {
 
     public NightVisionGogglesItem(Properties props) {
-        super(ArmorMaterials.IRON, Type.HELMET,
-                props
+        super(props
                 .component(PDataComponents.ENABLED.get(), false)
                 .component(PDataComponents.BATTERY.get(), new ComponentBatteryStorage(new BatteryStorage(1, true)))
                 .stacksTo(1));
@@ -58,11 +57,15 @@ public class NightVisionGogglesItem extends ArmorItem implements IBatteryBasedIt
             BatteryStorage bs = stack.get(PDataComponents.BATTERY).batteryStorage().copy();
             ItemStack helmet = player.getItemBySlot(EquipmentSlot.HEAD);
             if (helmet != stack) {
+                stack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(0));
                 NightVisionManager.getInstance().setNightVisionEnabled(false);
                 return;
             }
 
+            stack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(1));
             boolean isEnabled = stack.getOrDefault(PDataComponents.ENABLED.get(), false);
+
+
 
             if (isEnabled && bs.getTotalCharge() > 0) {
                 NightVisionManager.getInstance().setNightVisionEnabled(true);
@@ -105,5 +108,10 @@ public class NightVisionGogglesItem extends ArmorItem implements IBatteryBasedIt
                         .withStyle(ChatFormatting.RED),
                 true
         );
+    }
+
+    @Override
+    public @Nullable EquipmentSlot getEquipmentSlot(ItemStack stack) {
+        return EquipmentSlot.HEAD;
     }
 }

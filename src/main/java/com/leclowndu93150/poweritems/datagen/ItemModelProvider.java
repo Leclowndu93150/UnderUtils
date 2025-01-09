@@ -26,7 +26,6 @@ public class ItemModelProvider extends net.neoforged.neoforge.client.model.gener
     protected void registerModels() {
         basicItem(PItems.BATTERY.get());
         basicItem(PItems.BATTERY_PACK.get());
-        basicItem(PItems.NIGHT_VISION_GOGGLES.get());
         poweredItem(PItems.FLASHLIGHT.get());
         poweredItem(PItems.WINDUP_FLASHLIGHT.get());
     }
@@ -49,19 +48,11 @@ public class ItemModelProvider extends net.neoforged.neoforge.client.model.gener
                 .end();
     }
 
-    private void bucket(Fluid f) {
-        withExistingParent(key(f.getBucket()).getPath(), ResourceLocation.fromNamespaceAndPath("neoforge", "item/bucket"))
-                .customLoader(DynamicFluidContainerModelBuilder::begin)
-                .fluid(f);
-    }
 
     private static @NotNull ResourceLocation key(ItemLike item) {
         return BuiltInRegistries.ITEM.getKey(item.asItem());
     }
 
-    public ItemModelBuilder handHeldItem(Item item) {
-        return handHeldItem(item, "");
-    }
 
     public ItemModelBuilder handHeldItem(Item item, String suffix) {
         ResourceLocation location = BuiltInRegistries.ITEM.getKey(item);
@@ -75,12 +66,6 @@ public class ItemModelProvider extends net.neoforged.neoforge.client.model.gener
         return ResourceLocation.fromNamespaceAndPath(location.getNamespace(), "item/" + location.getPath() + suffx);
     }
 
-    public ItemModelBuilder basicItem(Item item, String suffix) {
-        ResourceLocation location = BuiltInRegistries.ITEM.getKey(item);
-        return getBuilder(item.toString() + suffix)
-                .parent(new ModelFile.UncheckedModelFile("item/generated"))
-                .texture("layer0", ResourceLocation.fromNamespaceAndPath(location.getNamespace(), "item/" + location.getPath()));
-    }
 
     private String name(ItemLike item) {
         return key(item).getPath();
